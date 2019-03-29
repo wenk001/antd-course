@@ -5,14 +5,27 @@ import { connect } from 'dva';
 const namespace = 'puzzlecards';
 
 const mapStateToProps = (state) => {
-  const cardList = state[namespace];
+  const cardList = state[namespace].data;
   return {
     cardList,
   };
 };
 
-@connect(mapStateToProps)
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onDidMount: () => {
+      dispatch({
+        type: `${namespace}/queryInitCards`,
+      });
+    },
+  };
+};
+
+@connect(mapStateToProps, mapDispatchToProps)
 export default class PuzzleCardsPage extends Component {
+  componentDidMount() {
+    this.props.onDidMount();
+  }
   render() {
     return (
       <div>
@@ -28,9 +41,6 @@ export default class PuzzleCardsPage extends Component {
             );
           })
         }
-        {/* <div>
-          <Button onClick={this.addNewCard}> 添加卡片 </Button>
-        </div> */}
       </div>
     );
   }
